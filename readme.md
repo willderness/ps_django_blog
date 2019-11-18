@@ -1,11 +1,13 @@
-# Install python and django.
+# Install python.
 
 Install python3 per your OS instructions.
 
-# Optional: Use virtual env to setup a new environment.
+# Setup virtual environment with venv
 
-`virtualenv venv`
-`source venv/bin/activate`
+```
+python -m venv venv
+source venv/bin/activate
+```
 
 # Install django and other requirements.
 
