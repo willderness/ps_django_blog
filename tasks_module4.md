@@ -44,7 +44,7 @@ def tag_posts(request, name):
 
 # Pass title to template
 
-Continuing in the `tag_posts` method, we want to pass a title for `Tag` page to the template.  First, clean the incoming `name` parameter by setting it equal to a lowercase version of itself (e.g. `name.lower()` ).  Then, create a `title` variable and set it equal to `"Posts about {}".format(name)`. To pass the `title` to the template, add a dictionary as another argument to the end of the `render()` call. In the dictionary, set `'title'` to the new `title` variable. 
+Continuing in the `tag_posts` method, we want to pass a title for the `Tag` page to the template.  Before the `return` line, clean the incoming `name` parameter by setting it equal to a lowercase version of itself (e.g. `name.lower()` ).  Then, also before the `return`,  create a `title` variable and set it equal to `"Posts about {}".format(name)`. To pass the `title` to the template, add a dictionary as another argument to the end of the `render()` call. In the dictionary, set `'title'` to the new `title` variable. 
 
 ```python
 def tag_posts(request, name):
@@ -56,7 +56,7 @@ def tag_posts(request, name):
 
 # Find posts and pass to template
 
-Since we want to display all of the posts with the name tag, let's first find the Tag object.  Call `get_object_or_404(Tag, name=name)` and set that equal to a variable named `tag`.  Then, get all of the posts with that tag by calling `BlogPost.objects.filter(tags=tag)` and setting the result equal to a variable named `posts`. Finally, pass the `posts` list to the template by adding `'posts':posts` to the dict in the `render()` call, `{'posts':posts, 'title':title}`.
+Since we want to display all of the posts with the name tag, let's first find the Tag object.  Right after the `title` line, call `get_object_or_404(Tag, name=name)` and set that equal to a variable named `tag`.  Then, get all of the posts with that tag by calling `BlogPost.objects.filter(tags=tag)` and setting the result equal to a variable named `posts`. Finally, pass the `posts` list to the template by adding `'posts':posts` to the dict in the `render()` call, `{'posts':posts, 'title':title}`.
 
 ```python
 def tag_posts(request, name):
@@ -87,7 +87,7 @@ To generate a url for the specified tag page, we can use `django.urls` `reverse(
 
 # Uncomment tag section of index and post templates
 
-Remove `{% comment %}` and `{% endcomment %}` tags from both `templates/mainapp/snippet_post_list.html` and `templates/mainapp/post.html`.
+Remove `{% comment %}` and `{% endcomment %}` tags from both `mainapp/templates/mainapp/snippet_post_list.html` and `mainapp/templates/mainapp/post.html`.
 
 # Add tags to the admin site
 

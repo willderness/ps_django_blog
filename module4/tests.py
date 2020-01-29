@@ -76,6 +76,22 @@ class PostTestCase(SimplerTestCase):
                                         z.value.func.value.attr == 'name' and
                                         z.value.func.attr == 'lower'):
                                         self.clean_assign_found = True
+                            # Task 9
+                            if (isinstance(y, ast.FunctionDef) and
+                                y.name == 'get_absolute_url'):
+                                self.get_absolute_url_found = True
+                                if isinstance(y.body[0], ast.Return):
+                                    self.get_absolute_url_return_found = True
+                                    if y.body[0].value.func.id == 'reverse':
+                                        self.get_absolute_url_reverse_found = True
+                                        if getattr(y.body[0].value.args[0], self.value) == 'tag_posts':
+                                            self.get_absolute_url_post_found = True
+                                            if (y.body[0].value.keywords[0].arg == 'args' and
+                                                y.body[0].value.keywords[0].value.elts[0].func.id == 'str' and
+                                                y.body[0].value.keywords[0].value.elts[0].args[0].value.id == 'self' and
+                                                y.body[0].value.keywords[0].value.elts[0].args[0].attr == 'name'):
+                                                self.get_absolute_url_args_correct = True
+
 
                     elif x.name == 'BlogPost':
                         for y in x.body:
@@ -90,22 +106,6 @@ class PostTestCase(SimplerTestCase):
                                         len(y.value.args) > 0 and
                                         getattr(y.value.args[0], self.value) == 'Tag'):
                                     self.tag_many_to_many_found = True
-                            # Task 9
-                            if (isinstance(y, ast.FunctionDef) and
-                                y.name == 'get_absolute_url'):
-                                self.get_absolute_url_found = True
-                                if isinstance(y.body[0], ast.Return):
-                                    self.get_absolute_url_return_found = True
-                                    if y.body[0].value.func.id == 'reverse':
-                                        self.get_absolute_url_reverse_found = True
-                                        if getattr(y.body[0].value.args[0], self.value) == 'post':
-                                            self.get_absolute_url_post_found = True
-                                            if (y.body[0].value.keywords[0].arg == 'args' and
-                                                y.body[0].value.keywords[0].value.elts[0].func.id == 'str' and
-                                                y.body[0].value.keywords[0].value.elts[0].args[0].value.id == 'self' and
-                                                y.body[0].value.keywords[0].value.elts[0].args[0].attr == 'id'):
-                                                self.get_absolute_url_args_correct = True
-
         except Exception as e:
             print(e)
             
@@ -126,12 +126,12 @@ class PostTestCase(SimplerTestCase):
         """Add clean method to sanitize input."""
         self.check_model_file()
 
-        self.assertTrue(self.clean_method_found, msg="Did you implement the `clean` method in the `tag` model class?")
+        self.assertTrue(self.clean_method_found, msg="Did you implement the `clean` method in the `Tag` model class?")
         self.assertTrue(self.clean_assign_found, msg="Did you assign to `self.name` in the `clean` method?")
 
     def test_task3_str_exists(self):
         self.check_model_file()
-        self.assertTrue(self.str_method_found, msg="Did you implement the `__str__` method in the `tag` model class?")
+        self.assertTrue(self.str_method_found, msg="Did you implement the `__str__` method in the `Tag` model class?")
 
     def test_task4_many_to_many_exists(self):
         self.check_model_file()
@@ -240,8 +240,8 @@ class PostTestCase(SimplerTestCase):
         self.assertTrue(self.get_absolute_url_found, msg="The method `get_absolute_url()` does not exist in the BlogPost model.")
         self.assertTrue(self.get_absolute_url_return_found, msg="The method `get_absolute_url()` does not return anything.")
         self.assertTrue(self.get_absolute_url_reverse_found, msg="The method `get_absolute_url()` does not call `reverse()`.")
-        self.assertTrue(self.get_absolute_url_post_found, msg="In `get_absolute_url()` the first argument in `reverse()` should be `'post'`.")
-        self.assertTrue(self.get_absolute_url_args_correct, msg="In `get_absolute_url()` the second argument in `reverse()` should be `args=[str(self.id)]`.")
+        self.assertTrue(self.get_absolute_url_post_found, msg="In `get_absolute_url()` the first argument in `reverse()` should be `'tag_posts'`.")
+        self.assertTrue(self.get_absolute_url_args_correct, msg="In `get_absolute_url()` the second argument in `reverse()` should be `args=[str(self.name)]`.")
 
     def test_task10_uncomment_templates(self):
         # Remove `{% comment %}` and {% endcomment %} tags from 
@@ -277,7 +277,7 @@ class PostTestCase(SimplerTestCase):
             pass
         
         self.assertTrue(import_Tag_found, msg="Did you import `Tag`?")
-        self.assertTrue(admin_site_register_found, msg="Did you register the Tag model to the admin site?")
+        self.assertTrue(admin_site_register_found, msg="Did you register the `Tag` model to the admin site?")
 
     def test_task12_make_migrations(self):
         msg = "Did you use `manage.py makemigrations` to create the `Tag` migrations file? Don't forget to `add` it to the git repo."
